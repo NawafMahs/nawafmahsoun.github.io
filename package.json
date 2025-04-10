@@ -1,8 +1,8 @@
 {
   "name": "portfolio",
-  "homepage": "https://nawafmahs.github.io/nawafmahs.github.io",
+  "homepage": "https://nawafmahs/nawafmahsoun.github.io ",
   "description": "Portfolio site for Nawaf Mahsoun",
-  "repository": "https://nawafmahs.github.io/nawafmahs.github.io",
+  "repository": "https://github.com/NawafMahs/nawafmahsoun.github.io.git",
   "author": "Nawaf Mahsoun",
   "sideEffects": false,
   "type": "module",
