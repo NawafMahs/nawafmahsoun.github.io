@@ -6,6 +6,6 @@ addons.setConfig({
     ...themes.dark,
     brandImage: './icon.svg',
     brandTitle: 'Nawaf Mahsoun Components',
-    brandUrl: 'https://hamishw.com',
+    brandUrl: 'https://https://bd394417.portfolio-7ag.pages.dev/',
   },
 });
