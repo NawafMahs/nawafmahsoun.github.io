@@ -1,0 +1,52 @@
+__  __  __
+\ \ \ \ \/
+ \ \/\ \
+  \/  \/
+
+The humans.txt file explains the team, technology,
+and graphic assets behind this site humanstxt.org.
+
+_______________________________________________________________________________
+
+DEVELOPER | デベロッパー
+
+Nawaf Mahsoun
+.NET Development
+
+Development tools:
+Visual Studio
+VS Code
+Azure DevOps
+SQL Server Management Studio
+Docker
+Git & GitHub
+
+twitter.com/hamishmw
+github.com/hamishmw
+
+_______________________________________________________________________________
+
+TECHNOLOGY | テクノロジー
+
+C# | .NET 6+
+ASP.NET Core MVC & Web API
+Blazor (Server & WebAssembly)
+Entity Framework Core | LINQ
+Microsoft SQL Server
+Clean Architecture | SOLID
+xUnit | Moq
+Azure Cloud Services
+CI/CD | DevOps
+Docker | Containers
+MudBlazor | Bootstrap
+HTML5 | CSS3
+React
+Three.js
+
+_______________________________________________________________________________
+
+FONTS | フォント
+
+Gotham
+IPA Gothic Regular
+Hiragino Kaku Gothic W8
