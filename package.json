@@ -1,17 +1,18 @@
 {
   "name": "portfolio",
-  "homepage": "https://nawafmahs/nawafmahsoun.github.io ",
+  "homepage": "https://nawafmahs.github.io/nawafmahsoun.github.io ",
   "description": "Portfolio site for Nawaf Mahsoun",
   "repository": "https://github.com/NawafMahs/nawafmahsoun.github.io.git",
   "author": "Nawaf Mahsoun",
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "predeploy": "npm run build",
     "build": "remix vite:build",
     "dev": "node ./scripts/dev.cjs && remix vite:dev",
     "start": "wrangler pages dev ./build/client",
     "postinstall": "node ./scripts/draco.cjs",
-    "deploy": "npm run build && wrangler pages deploy ./build/client --project-name portfolio",
+    "deploy": "gh-pages -d build",
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
     "deploy:storybook": "wrangler pages deploy ./storybook-static --project-name portfolio-storybook --branch main"
