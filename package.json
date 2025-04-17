@@ -8,9 +8,9 @@
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
-    "build": "remix build",
-    "dev": "remix dev",
-    "start": "vercel dev",
+    "build": "remix vite:build",
+    "dev": "node ./scripts/dev.cjs && remix vite:dev",
+    "start": "wrangler pages dev ./build/client",
     "postinstall": "node ./scripts/draco.cjs",
     "deploy": "gh-pages -d build",
     "dev:storybook": "storybook dev -p 6006",
