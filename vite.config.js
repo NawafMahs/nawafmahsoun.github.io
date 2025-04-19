@@ -1,6 +1,6 @@
 import {
   vitePlugin as remix,
-  cloudflareDevProxyVitePlugin as remixCloudflareDevProxy,
+  // cloudflareDevProxyVitePlugin as remixCloudflareDevProxy, // Removed for Vercel compatibility
 } from '@remix-run/dev';
 import { defineConfig } from 'vite';
 import jsconfigPaths from 'vite-jsconfig-paths';
@@ -25,7 +25,7 @@ export default defineConfig({
       remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
       providerImportSource: '@mdx-js/react',
     }),
-    remixCloudflareDevProxy(),
+    // remixCloudflareDevProxy(), // Removed for Vercel compatibility
     remix({
       routes(defineRoutes) {
         return defineRoutes(route => {
