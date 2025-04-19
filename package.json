@@ -1,6 +1,6 @@
 {
   "name": "portfolio",
-  "homepage": "https://nawafmahs.github.io/nawafmahsoun.github.io",
+  "homepage": "https://nawafmahs.github.io/nawafmahsoun.github.io ",
   "description": "Portfolio site for Nawaf Mahsoun",
   "repository": "https://github.com/NawafMahs/nawafmahsoun.github.io.git",
   "author": "Nawaf Mahsoun",
@@ -8,12 +8,11 @@
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
-    "build": "remix vite:build",
-    "dev": "node ./scripts/dev.cjs && remix vite:dev",
-    "start": "wrangler pages dev ./build/client",
+    "build": "vite build",
+    "dev": "vite",
+    "start": "vite preview",
     "postinstall": "node ./scripts/draco.cjs",
     "deploy": "gh-pages -d build",
-    "postbuild": "copy build\\client\\index.html build\\client\\404.html && type NUL > build\\client\\.nojekyll",
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
     "deploy:storybook": "wrangler pages deploy ./storybook-static --project-name portfolio-storybook --branch main"
