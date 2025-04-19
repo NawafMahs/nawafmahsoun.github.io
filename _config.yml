@@ -1,5 +1,0 @@
-# Disable Liquid processing in MDX files
-mdx:
-  renderer: MDX
-  options:
-    disable_liquid: true
