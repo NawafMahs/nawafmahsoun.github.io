@@ -1,0 +1,1 @@
+import{j as r}from"./jsx-runtime-i88aexF6.js";import{c as e,r as o}from"./vendor-react-vendor-C-CbGDQp.js";import{R as t}from"./vendor-remix-vendor-Bg8iBN6h.js";var s;s=e.createRoot,o.startTransition(()=>{s(document.getElementById("root")).render(r.jsx(o.StrictMode,{children:r.jsx(t,{})}))});
