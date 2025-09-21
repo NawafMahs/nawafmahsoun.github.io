@@ -3,9 +3,9 @@
 </p>
 <h1 align="center">Personal portfolio</h1>
 
-[![Site preview](/public/site-preview.png)](https://https://bd394417.portfolio-7ag.pages.dev/)
+[![Site preview](/public/site-preview.png)](https://nawafmahs.github.io/nawafmahsoun.github.io)
 
-My design portfolio to showcase a few projects. Built with [Remix](https://remix.run/), [Three.js](https://threejs.org/), and [Framer Motion](https://www.framer.com/motion/). View the [live site](https://https://bd394417.portfolio-7ag.pages.dev/) or check out a live version of the [components storybook](https://storybook.hamishw.com).
+My design portfolio to showcase a few projects. Built with [Remix](https://remix.run/), [Three.js](https://threejs.org/), and [Framer Motion](https://www.framer.com/motion/). View the [live site](https://nawafmahs.github.io/nawafmahsoun.github.io) or check out a live version of the [components storybook](https://storybook.hamishw.com).
 
 ## Install & run
 
@@ -29,11 +29,17 @@ npm run dev:storybook
 
 ## Deployment
 
-I've set up the site using Cloudflare for hosting. Deploy the site to Cloudflare Pages:
+This site is deployed using GitHub Pages. Deploy the site with:
 
 ```bash
 npm run deploy
 ```
+
+The site will be automatically deployed to GitHub Pages at: https://nawafmahs.github.io/nawafmahsoun.github.io
+
+### Automatic Deployment
+
+Every push to the `master` branch will automatically trigger a GitHub Actions workflow that builds and deploys the site.
 
 ## Permissions
 
