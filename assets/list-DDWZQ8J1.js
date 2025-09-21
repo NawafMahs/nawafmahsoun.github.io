@@ -1,1 +1,0 @@
-import{j as s}from"./jsx-runtime-i88aexF6.js";import{c as e}from"./heading-BdKyha8q.js";const r=({ordered:r,children:a,className:c,...i})=>{const l=r?"ol":"ul";return s.jsx(l,{className:e("_list_1ecfb_2",c),...i,children:a})},a=({children:e,...r})=>s.jsx("li",{className:"_item_1ecfb_15",...r,children:e});export{a as L,r as a};

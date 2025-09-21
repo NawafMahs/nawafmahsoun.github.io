@@ -1,1 +1,0 @@
-import{j as s}from"./jsx-runtime-i88aexF6.js";import{r}from"./vendor-react-vendor-C-CbGDQp.js";import{c as a}from"./heading-BdKyha8q.js";const e=r.forwardRef(({className:r,showOnFocus:e,as:o="span",children:d,visible:n,...i},m)=>s.jsx(o,{className:a("_hidden_1mhmf_2",r),"data-hidden":!n&&!e,"data-show-on-focus":e,ref:m,...i,children:d}));export{e as V};
