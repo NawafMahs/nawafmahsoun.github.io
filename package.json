@@ -12,7 +12,7 @@
     "dev": "vite",
     "start": "vite preview",
     "postinstall": "node ./scripts/draco.cjs",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d build/client",
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
     "deploy:storybook": "wrangler pages deploy ./storybook-static --project-name portfolio-storybook --branch main"
