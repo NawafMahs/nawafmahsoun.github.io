@@ -1,3 +1,25 @@
-# Ignore everything - this project uses GitHub Pages, not Vercel
-*
-!README.md
+# Vercel deployment configuration
+# This project supports both GitHub Pages and Vercel deployment
+
+# Ignore build outputs (will be generated)
+build/
+dist/
+.cache/
+
+# Ignore development files
+node_modules/
+.env*
+*.log
+
+# Ignore git and CI files
+.git/
+.github/
+.lighthouserc.json
+
+# Ignore documentation (not needed for deployment)
+CHANGES_SUMMARY.md
+CONTRIBUTING.md
+DEPLOYMENT_GUIDE.md
+
+# Keep source files and configuration
+# All other files will be included by default
