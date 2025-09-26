@@ -23,8 +23,11 @@
 !.prettierrc
 !.npmrc
 !src/
+!src/**
 !app/
+!app/**
 !public/
+!public/**
 !scripts/
 !scripts/**
 !README.md
