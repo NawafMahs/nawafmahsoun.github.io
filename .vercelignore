@@ -1,3 +1,28 @@
-# Ignore everything - this project uses GitHub Pages, not Vercel
+# This project is designed for GitHub Pages deployment
+# If you want to deploy to Vercel, remove this file or configure properly
+
+# For now, allow essential files for Vercel build (optional)
+# Uncomment the lines below if you want Vercel deployment:
+
+# node_modules/
+# .env*
+# .git/
+# *.log
+# .cache/
+# build/
+# dist/
+
+# Currently ignoring everything except essential files
 *
+!package.json
+!package-lock.json
+!vite.config.js
+!jsconfig.json
+!postcss.config.cjs
+!.eslintrc.cjs
+!.prettierrc
+!src/
+!app/
+!public/
+!scripts/
 !README.md
