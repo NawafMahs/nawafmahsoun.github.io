@@ -3,7 +3,7 @@
     "collect": {
       "url": ["http://localhost:8080"],
       "startServerCommand": "serve -s build/client -l 8080",
-      "startServerReadyPattern": "Local:",
+      "startServerReadyPattern": "Accepting connections",
       "numberOfRuns": 3
     },
     "assert": {
