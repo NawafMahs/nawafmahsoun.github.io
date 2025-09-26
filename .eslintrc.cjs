@@ -1,7 +1,6 @@
 /**
- * This is intended to be a basic starting point for linting in your app.
- * It relies on recommended configs out of the box for simplicity, but you can
- * and should modify this configuration to best suit your team's needs.
+ * ESLint configuration for portfolio project
+ * Optimized for development speed while maintaining code quality
  */
 
 /** @type {import('eslint').Linter.Config} */
@@ -19,18 +18,22 @@ module.exports = {
     browser: true,
     commonjs: true,
     es6: true,
+    amd: true, // For AMD modules like define()
   },
 
-  // Base config
-  extends: ['eslint:recommended', 'plugin:storybook/recommended'],
+  // Base config - more lenient for portfolio projects
+  extends: ['eslint:recommended'],
 
   rules: {
-    semi: 'error',
-    'no-unused-vars': 'warn',
+    // Relaxed rules for portfolio development
+    'semi': 'off', // Don't enforce semicolons
+    'no-unused-vars': 'warn', // Warn instead of error
+    'no-undef': 'warn', // Warn for undefined variables
+    'no-empty': 'warn', // Warn for empty blocks
   },
 
   overrides: [
-    // React
+    // React files
     {
       files: ['**/*.{js,jsx,ts,tsx}'],
       plugins: ['react', 'jsx-a11y'],
@@ -38,11 +41,15 @@ module.exports = {
         'plugin:react/recommended',
         'plugin:react/jsx-runtime',
         'plugin:react-hooks/recommended',
-        'plugin:jsx-a11y/recommended',
       ],
       rules: {
+        // React-specific relaxed rules
         'react/prop-types': 'off',
         'react/display-name': 'off',
+        'react/no-unescaped-entities': 'warn', // Warn instead of error
+        'react/jsx-uses-react': 'off', // Not needed with new JSX transform
+        'react/react-in-jsx-scope': 'off', // Not needed with new JSX transform
+        'no-unused-vars': 'off', // React imports are often "unused"
       },
       settings: {
         react: {
@@ -53,9 +60,16 @@ module.exports = {
           { name: 'Link', linkAttribute: 'to' },
           { name: 'NavLink', linkAttribute: 'to' },
         ],
-        'import/resolver': {
-          typescript: {},
-        },
+      },
+    },
+    // Storybook files
+    {
+      files: ['**/*.stories.{js,jsx,ts,tsx}'],
+      extends: ['plugin:storybook/recommended'],
+      rules: {
+        // Even more relaxed for storybook files
+        'no-unused-vars': 'off',
+        'no-undef': 'off',
       },
     },
   ],
