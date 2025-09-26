@@ -35,7 +35,7 @@
     "rehype-img-size": "^1.0.1",
     "rehype-slug": "^6.0.0",
     "three": "^0.180.0",
-    "three-stdlib": "^2.29.4"
+    "three-stdlib": "^2.36.0"
   },
   "devDependencies": {
     "@csstools/postcss-global-data": "^2.1.1",
