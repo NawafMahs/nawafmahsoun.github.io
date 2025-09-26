@@ -34,7 +34,7 @@
     "react-dom": "^18.2.0",
     "rehype-img-size": "^1.0.1",
     "rehype-slug": "^6.0.0",
-    "three": "^0.161.0",
+    "three": "^0.180.0",
     "three-stdlib": "^2.29.4"
   },
   "devDependencies": {
