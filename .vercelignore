@@ -21,8 +21,10 @@
 !postcss.config.cjs
 !.eslintrc.cjs
 !.prettierrc
+!.npmrc
 !src/
 !app/
 !public/
 !scripts/
+!scripts/**
 !README.md
