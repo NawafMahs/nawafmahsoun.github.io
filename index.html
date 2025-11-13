@@ -35,14 +35,13 @@
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script>
-      // Remix context for static build (SPA mode)
-      // These will be populated by Remix's entry client
+      // Remix context for static build (SPA mode with lazy loading)
       window.__remixContext = {
         url: window.location.href,
         state: { loaderData: {}, actionData: undefined, errors: null },
         future: {
           v3_fetcherPersist: false,
-          v3_lazyRouteDiscovery: false,
+          v3_lazyRouteDiscovery: true,  // Enable lazy route loading
           v3_relativeSplatPath: false,
           v3_singleFetch: false,
           v3_throwAbortReason: false
@@ -339,76 +338,49 @@
   </head>
   <body data-theme="dark">
     <div id="root"></div>
-    <script>
-      // Test if scripts are running
-      console.log('[TEST] Script is running!');
-      console.log('[TEST] window.__remixManifest exists:', typeof window.__remixManifest !== 'undefined');
-      console.log('[TEST] window.__remixContext exists:', typeof window.__remixContext !== 'undefined');
-    </script>
     <script type="module">
-      console.log('[Remix] Module script starting...');
-      console.log('[Remix] Manifest routes:', Object.keys(window.__remixManifest?.routes || {}).length);
-      
-      if (!window.__remixManifest) {
-        console.error('[Remix] No manifest found!');
-        document.body.innerHTML = '<div style="padding: 2rem; color: red;">ERROR: No Remix manifest found!</div>';
-        throw new Error('No Remix manifest');
-      }
-      
-      // Load all route modules and entry client
+      // Initialize Remix - load all routes and entry client
       (async () => {
         try {
+          if (!window.__remixManifest || !window.__remixManifest.routes) {
+            throw new Error('Remix manifest not found');
+          }
+          
+          // Load all routes - entry client is patched to use createRoot
           const routeIds = Object.keys(window.__remixManifest.routes);
           console.log('[Remix] Loading', routeIds.length, 'route modules...');
           
-          // Import all route modules in parallel
-          const routePromises = routeIds.map(async (routeId) => {
-            try {
-              const modulePath = window.__remixManifest.routes[routeId].module;
-              console.log('[Remix] Importing route:', routeId, 'from', modulePath);
-              const routeModule = await import(modulePath);
-              console.log('[Remix] ✓ Loaded route:', routeId);
-              return { routeId, module: routeModule };
-            } catch (err) {
-              console.error('[Remix] ✗ Failed to load route', routeId, ':', err);
-              return null;
-            }
-          });
-          
-          const routeResults = await Promise.all(routePromises);
-          
-          // Build route modules object
           const routeModules = {};
-          let loadedCount = 0;
-          routeResults.forEach((result) => {
-            if (result && result.module) {
-              routeModules[result.routeId] = result.module;
-              loadedCount++;
+          const loadPromises = routeIds.map(async (routeId) => {
+            try {
+              const route = window.__remixManifest.routes[routeId];
+              routeModules[routeId] = await import(route.module);
+              return true;
+            } catch (err) {
+              console.error('[Remix] Failed to load route', routeId, ':', err.message);
+              return false;
             }
           });
           
-          console.log('[Remix] ✓ Loaded', loadedCount, 'of', routeIds.length, 'route modules');
-          console.log('[Remix] Route modules keys:', Object.keys(routeModules));
+          await Promise.all(loadPromises);
+          console.log('[Remix] Loaded', Object.keys(routeModules).length, 'route modules');
           
-          // Set route modules BEFORE loading entry client
+          // Set route modules
           window.__remixRouteModules = routeModules;
-          console.log('[Remix] Route modules set on window');
           
-          console.log('[Remix] Loading entry client from: /assets/entry.client-C9M83770.js');
-          // Load entry client - it needs route modules to be ready
-          const entryModule = await import("/assets/entry.client-C9M83770.js");
-          console.log('[Remix] ✓ Entry client loaded:', entryModule);
+          // Load entry client (already patched to use createRoot)
+          console.log('[Remix] Loading entry client...');
+          await import("/assets/entry.client-C9M83770.js");
         } catch (error) {
-          console.error('[Remix] ✗ Initialization failed:', error);
-          console.error('[Remix] Error name:', error.name);
-          console.error('[Remix] Error message:', error.message);
-          console.error('[Remix] Error stack:', error.stack);
+          console.error('[Remix] Fatal error:', error);
           document.body.innerHTML = `
-            <div style="padding: 2rem; text-align: center; color: white; font-family: monospace; background: #222;">
-              <h1 style="color: red;">Failed to load application</h1>
-              <p><strong>Error:</strong> ${error.name}: ${error.message}</p>
-              <pre style="text-align: left; margin-top: 1rem; background: #111; padding: 1rem; border-radius: 4px; overflow: auto; color: #f88;">${error.stack}</pre>
-              <p style="margin-top: 1rem;">Check the browser console for more details.</p>
+            <div style="padding: 2rem; color: white; background: #222; font-family: monospace;">
+              <h1 style="color: red;">Application Error</h1>
+              <p>${error.message}</p>
+              <details style="margin-top: 1rem;">
+                <summary>Stack trace</summary>
+                <pre style="background: #111; padding: 1rem; overflow: auto; white-space: pre-wrap;">${error.stack}</pre>
+              </details>
             </div>
           `;
         }
