@@ -339,37 +339,40 @@
   <body data-theme="dark">
     <div id="root"></div>
     <script type="module">
-      // Initialize Remix - load all routes and entry client
+      // Initialize Remix with minimal blocking
       (async () => {
         try {
           if (!window.__remixManifest || !window.__remixManifest.routes) {
             throw new Error('Remix manifest not found');
           }
           
-          // Load all routes - entry client is patched to use createRoot
-          const routeIds = Object.keys(window.__remixManifest.routes);
-          console.log('[Remix] Loading', routeIds.length, 'route modules...');
+          // Only load root route initially - other routes will load on-demand
+          const rootRouteId = 'app/root.jsx';
+          const homeRouteId = 'app/routes/home/route.js';
           
+          const essentialRoutes = [rootRouteId, homeRouteId].filter(id => 
+            window.__remixManifest.routes[id]
+          );
+          
+          console.log('[Remix] Loading essential routes:', essentialRoutes);
+          
+          // Load essential routes only
           const routeModules = {};
-          const loadPromises = routeIds.map(async (routeId) => {
+          for (const routeId of essentialRoutes) {
             try {
               const route = window.__remixManifest.routes[routeId];
               routeModules[routeId] = await import(route.module);
-              return true;
+              console.log('[Remix] Loaded:', routeId);
             } catch (err) {
-              console.error('[Remix] Failed to load route', routeId, ':', err.message);
-              return false;
+              console.error('[Remix] Failed to load', routeId, ':', err);
             }
-          });
+          }
           
-          await Promise.all(loadPromises);
-          console.log('[Remix] Loaded', Object.keys(routeModules).length, 'route modules');
-          
-          // Set route modules
+          // Set route modules - patchRoutesOnNavigation will handle lazy loading
           window.__remixRouteModules = routeModules;
           
           // Load entry client (already patched to use createRoot)
-          console.log('[Remix] Loading entry client...');
+          console.log('[Remix] Initializing...');
           await import("/assets/entry.client-C9M83770.js");
         } catch (error) {
           console.error('[Remix] Fatal error:', error);
