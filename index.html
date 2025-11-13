@@ -339,9 +339,21 @@
   </head>
   <body data-theme="dark">
     <div id="root"></div>
+    <script>
+      // Test if scripts are running
+      console.log('[TEST] Script is running!');
+      console.log('[TEST] window.__remixManifest exists:', typeof window.__remixManifest !== 'undefined');
+      console.log('[TEST] window.__remixContext exists:', typeof window.__remixContext !== 'undefined');
+    </script>
     <script type="module">
-      console.log('[Remix] Starting initialization...');
-      console.log('[Remix] Manifest routes:', Object.keys(window.__remixManifest.routes).length);
+      console.log('[Remix] Module script starting...');
+      console.log('[Remix] Manifest routes:', Object.keys(window.__remixManifest?.routes || {}).length);
+      
+      if (!window.__remixManifest) {
+        console.error('[Remix] No manifest found!');
+        document.body.innerHTML = '<div style="padding: 2rem; color: red;">ERROR: No Remix manifest found!</div>';
+        throw new Error('No Remix manifest');
+      }
       
       // Load all route modules and entry client
       (async () => {
@@ -352,11 +364,13 @@
           // Import all route modules in parallel
           const routePromises = routeIds.map(async (routeId) => {
             try {
-              const routeModule = await import(window.__remixManifest.routes[routeId].module);
-              console.log('[Remix] Loaded route:', routeId);
+              const modulePath = window.__remixManifest.routes[routeId].module;
+              console.log('[Remix] Importing route:', routeId, 'from', modulePath);
+              const routeModule = await import(modulePath);
+              console.log('[Remix] ✓ Loaded route:', routeId);
               return { routeId, module: routeModule };
             } catch (err) {
-              console.error(`[Remix] Failed to load route ${routeId}:`, err);
+              console.error('[Remix] ✗ Failed to load route', routeId, ':', err);
               return null;
             }
           });
@@ -373,24 +387,27 @@
             }
           });
           
-          console.log('[Remix] Loaded', loadedCount, 'of', routeIds.length, 'route modules');
-          console.log('[Remix] Route modules:', Object.keys(routeModules));
+          console.log('[Remix] ✓ Loaded', loadedCount, 'of', routeIds.length, 'route modules');
+          console.log('[Remix] Route modules keys:', Object.keys(routeModules));
           
           // Set route modules BEFORE loading entry client
           window.__remixRouteModules = routeModules;
+          console.log('[Remix] Route modules set on window');
           
-          console.log('[Remix] Loading entry client...');
+          console.log('[Remix] Loading entry client from: /assets/entry.client-C9M83770.js');
           // Load entry client - it needs route modules to be ready
-          await import("/assets/entry.client-C9M83770.js");
-          console.log('[Remix] Entry client loaded');
+          const entryModule = await import("/assets/entry.client-C9M83770.js");
+          console.log('[Remix] ✓ Entry client loaded:', entryModule);
         } catch (error) {
-          console.error('[Remix] Initialization failed:', error);
+          console.error('[Remix] ✗ Initialization failed:', error);
+          console.error('[Remix] Error name:', error.name);
+          console.error('[Remix] Error message:', error.message);
           console.error('[Remix] Error stack:', error.stack);
           document.body.innerHTML = `
-            <div style="padding: 2rem; text-align: center; color: white; font-family: monospace;">
-              <h1>Failed to load application</h1>
-              <p>Error: ${error.message}</p>
-              <pre style="text-align: left; margin-top: 1rem; background: #222; padding: 1rem; border-radius: 4px; overflow: auto;">${error.stack}</pre>
+            <div style="padding: 2rem; text-align: center; color: white; font-family: monospace; background: #222;">
+              <h1 style="color: red;">Failed to load application</h1>
+              <p><strong>Error:</strong> ${error.name}: ${error.message}</p>
+              <pre style="text-align: left; margin-top: 1rem; background: #111; padding: 1rem; border-radius: 4px; overflow: auto; color: #f88;">${error.stack}</pre>
               <p style="margin-top: 1rem;">Check the browser console for more details.</p>
             </div>
           `;
