@@ -333,47 +333,67 @@
         url: "",
         version: ""
       };
-      // Route modules - will be populated by route-loader module
+      // Route modules will be loaded by the script below
       window.__remixRouteModules = {};
     </script>
   </head>
   <body data-theme="dark">
     <div id="root"></div>
     <script type="module">
-      // Load route modules and entry client
-      // This matches Remix's expected pattern for SPA mode
+      console.log('[Remix] Starting initialization...');
+      console.log('[Remix] Manifest routes:', Object.keys(window.__remixManifest.routes).length);
+      
+      // Load all route modules and entry client
       (async () => {
         try {
           const routeIds = Object.keys(window.__remixManifest.routes);
-          const routeModules = {};
+          console.log('[Remix] Loading', routeIds.length, 'route modules...');
           
-          // Import all route modules
-          const routeImports = routeIds.map(async (routeId) => {
+          // Import all route modules in parallel
+          const routePromises = routeIds.map(async (routeId) => {
             try {
-              const module = await import(window.__remixManifest.routes[routeId].module);
-              return { routeId, module };
-            } catch (error) {
-              console.warn(`Failed to load route ${routeId}:`, error);
+              const routeModule = await import(window.__remixManifest.routes[routeId].module);
+              console.log('[Remix] Loaded route:', routeId);
+              return { routeId, module: routeModule };
+            } catch (err) {
+              console.error(`[Remix] Failed to load route ${routeId}:`, err);
               return null;
             }
           });
           
-          // Wait for all routes to load
-          const loadedRoutes = await Promise.all(routeImports);
-          loadedRoutes.forEach((result) => {
-            if (result) {
+          const routeResults = await Promise.all(routePromises);
+          
+          // Build route modules object
+          const routeModules = {};
+          let loadedCount = 0;
+          routeResults.forEach((result) => {
+            if (result && result.module) {
               routeModules[result.routeId] = result.module;
+              loadedCount++;
             }
           });
           
-          // Set route modules before loading entry client
+          console.log('[Remix] Loaded', loadedCount, 'of', routeIds.length, 'route modules');
+          console.log('[Remix] Route modules:', Object.keys(routeModules));
+          
+          // Set route modules BEFORE loading entry client
           window.__remixRouteModules = routeModules;
           
-          // Load entry client - it will use the route modules
+          console.log('[Remix] Loading entry client...');
+          // Load entry client - it needs route modules to be ready
           await import("/assets/entry.client-C9M83770.js");
+          console.log('[Remix] Entry client loaded');
         } catch (error) {
-          console.error('Failed to initialize Remix app:', error);
-          document.body.innerHTML = '<div style="padding: 2rem; text-align: center;"><h1>Failed to load application</h1><p>Please refresh the page.</p></div>';
+          console.error('[Remix] Initialization failed:', error);
+          console.error('[Remix] Error stack:', error.stack);
+          document.body.innerHTML = `
+            <div style="padding: 2rem; text-align: center; color: white; font-family: monospace;">
+              <h1>Failed to load application</h1>
+              <p>Error: ${error.message}</p>
+              <pre style="text-align: left; margin-top: 1rem; background: #222; padding: 1rem; border-radius: 4px; overflow: auto;">${error.stack}</pre>
+              <p style="margin-top: 1rem;">Check the browser console for more details.</p>
+            </div>
+          `;
         }
       })();
     </script>
