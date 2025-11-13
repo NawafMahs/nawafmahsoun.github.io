@@ -53,9 +53,33 @@
       // Remix manifest with routes
       window.__remixManifest = {
         routes: {
+          "app/root.jsx": {
+                    "id": "app/root.jsx",
+                    "path": "",
+                    "index": false,
+                    "caseSensitive": false,
+                    "hasLoader": true,
+                    "hasAction": false,
+                    "hasErrorBoundary": true,
+                    "module": "/assets/root-CrxCXVGk.js",
+                    "imports": [
+                              "/assets/jsx-runtime-e9svsKL-.js",
+                              "/assets/image-CyAsWJ2Q.js",
+                              "/assets/error-CifR-nTS.js",
+                              "/assets/visually-hidden-DWETt_x6.js",
+                              "/assets/heading-CC3zBnSN.js",
+                              "/assets/useScrollToHash-DJGQhTvy.js",
+                              "/assets/useWindowSize-BaU--EEd.js",
+                              "/assets/config-B1ThRYLq.js",
+                              "/assets/components-DYXJCFuo.js",
+                              "/assets/decoder-text-BtVp3XXn.js",
+                              "/assets/use-spring-C3qV9qVq.js",
+                              "/assets/index-CmfjIxA9.js"
+                    ]
+          },
           "app/routes/$.jsx": {
                     "id": "app/routes/$.jsx",
-                    "path": "/$",
+                    "path": "*",
                     "index": false,
                     "caseSensitive": false,
                     "hasLoader": false,
@@ -90,7 +114,7 @@
                     "path": "/articles/hello-world",
                     "index": false,
                     "caseSensitive": false,
-                    "hasLoader": false,
+                    "hasLoader": true,
                     "hasAction": false,
                     "hasErrorBoundary": false,
                     "module": "/assets/articles.hello-world-BlhSWMBH.js",
@@ -104,7 +128,7 @@
                     "path": "/articles/modern-styling-in-react",
                     "index": false,
                     "caseSensitive": false,
-                    "hasLoader": false,
+                    "hasLoader": true,
                     "hasAction": false,
                     "hasErrorBoundary": false,
                     "module": "/assets/articles.modern-styling-in-react-kDJFcE5I.js",
@@ -118,7 +142,7 @@
                     "path": "/articles",
                     "index": false,
                     "caseSensitive": false,
-                    "hasLoader": false,
+                    "hasLoader": true,
                     "hasAction": false,
                     "hasErrorBoundary": false,
                     "module": "/assets/route-DPT9m8oY.js",
@@ -309,12 +333,49 @@
         url: "",
         version: ""
       };
-      // Route modules will be loaded dynamically
+      // Route modules - will be populated by route-loader module
       window.__remixRouteModules = {};
     </script>
   </head>
   <body data-theme="dark">
     <div id="root"></div>
-    <script type="module" src="/assets/entry.client-C9M83770.js"></script>
+    <script type="module">
+      // Load route modules and entry client
+      // This matches Remix's expected pattern for SPA mode
+      (async () => {
+        try {
+          const routeIds = Object.keys(window.__remixManifest.routes);
+          const routeModules = {};
+          
+          // Import all route modules
+          const routeImports = routeIds.map(async (routeId) => {
+            try {
+              const module = await import(window.__remixManifest.routes[routeId].module);
+              return { routeId, module };
+            } catch (error) {
+              console.warn(`Failed to load route ${routeId}:`, error);
+              return null;
+            }
+          });
+          
+          // Wait for all routes to load
+          const loadedRoutes = await Promise.all(routeImports);
+          loadedRoutes.forEach((result) => {
+            if (result) {
+              routeModules[result.routeId] = result.module;
+            }
+          });
+          
+          // Set route modules before loading entry client
+          window.__remixRouteModules = routeModules;
+          
+          // Load entry client - it will use the route modules
+          await import("/assets/entry.client-C9M83770.js");
+        } catch (error) {
+          console.error('Failed to initialize Remix app:', error);
+          document.body.innerHTML = '<div style="padding: 2rem; text-align: center;"><h1>Failed to load application</h1><p>Please refresh the page.</p></div>';
+        }
+      })();
+    </script>
   </body>
 </html>
